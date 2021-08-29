@@ -42,7 +42,14 @@ puppet cert sign "FQDN of agent using hostname -i" #sign the cert to allow the s
 puppet cert list -all #now "+" will be added infront of agent 
 
 other commands
+pupper cert list 
+pupper cert list  -all
 puppet cert unsign "FQDN" and cleanup ssl directory in agent node using rm -rf command 
 the restart puppet-agent in agnet node using "puppet agent -tv"
+
+checking, smoke testing and apply commands
+puppet parser validate "site.pp" #to check
+puppet apply site.pp --noop #smoke testing means no operations optional 
+puppet apply site.pp #apply the changes as pert the manifest catlog
 
 
