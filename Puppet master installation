@@ -1,1 +1,48 @@
-# Puppet
+Download puppet repo from https://puppet.com/docs/puppet/5.5/puppet_platform.html#apt-based-systems or use the below commands directly 
+Linux distros - sudo rpm -Uvh https://yum.puppet.com/puppet5-release-el-7.noarch.rpm
+Unix distros - wget https://apt.puppetlabs.com/puppet5-release-xenial.deb, sudo dpkg -i puppet5-release-xenial.deb, sudo apt update
+-------------------------------------------------------------------------------------------------------
+Puppet server/master installation in Linux distro (CentOS)
+
+yum repolist
+sudo rpm -Uvh https://yum.puppet.com/puppet5-release-el-7.noarch.rpm
+yum list | grep -i puppet 
+from the filtered list choose "puppetserver"
+yum install "puppetserver--------"
+systemctl start puppetserver #starting the master service 
+systemctl status puppetserver #checking the status 
+ln -s /opt/puppetlabs/bin/puppet /usr/bin/puppet #create puppet binary command using the below soft link
+puppet cert list -all #to check list of certs in puppet master 
+touch /etc/puppetlabs/code/environments/production/manifests/site.pp #creating site.pp file in manifests to install ntpd service 
+vi /etc/puppetlabs/code/environments/production/manifests/site.pp #edit the file with the below contents
+
+# class def
+class ntpdemo {
+ #install 
+   package { "ntp":
+   ensure => "present",
+   }
+# configure the ntpd service 
+  file { "/etc/ntp.conf":
+     ensure => "present",
+     content => "server 0.centos.pool.ntp.org iburst\n"
+  }
+# start ntpd service
+   service { "ntpd":
+   ensure => "running",
+  }
+}
+include ntpdemo
+
+
+
+[IMP] follow the below steps after installing puppet server 
+puppet cert list -all #check whether agent cert is loaded to master 
+puppet cert sign "FQDN of agent using hostname -i" #sign the cert to allow the secure connection 
+puppet cert list -all #now "+" will be added infront of agent 
+
+other commands
+puppet cert unsign "FQDN" and cleanup ssl directory in agent node using rm -rf command 
+the restart puppet-agent in agnet node using "puppet agent -tv"
+
+
