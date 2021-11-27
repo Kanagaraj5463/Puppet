@@ -1,0 +1,21 @@
+
+set DNS name for private ip using "hostnamectl set-hostname agent.example.com"
+then 
+make an entry in /etc/hosts in both the servers
+
+
+private ip agent.example.com
+
+
+[main]
+certname = agent.example.com
+server = master.example.com
+
+
+make sure master server is listening to ingress 8140 port
+
+
+
+
+
+
